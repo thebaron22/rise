@@ -7,9 +7,9 @@ int main()
   double epheflag = SEFLG_SWIEPH;
   int gregflag = SE_GREG_CAL;
 
-  int year = 2019;
+  int year = 2020;
   int month = 1;
-  int day = 16;
+  int day = 11;
 
   double geo_longitude = 150.995180; // positive for east, negative for west of Greenwich
   double geo_latitude = -33.818650;

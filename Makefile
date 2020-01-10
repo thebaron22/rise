@@ -1,63 +1,15 @@
-# $Header$
-# this Makefile creates a SwissEph library and a swetest sample on 64-bit
-# Redhat Enterprise Linux RHEL 6.
+# Expects a prebuilt libswe.a from the Swiss ephemeris in the src directly.
+# You can build it by unpacking the Swiss ephemeris and typing make libswe.a in the src directory
 
-# The mode marked as 'Linux' should also work with the GNU C compiler
-# gcc on other systems. 
-
-# If you modify this makefile for another compiler, please
-# let us know. We would like to add as many variations as possible.
-# If you get warnings and error messages from your compiler, please
-# let us know. We like to fix the source code so that it compiles
-# free of warnings.
-# send email to the Swiss Ephemeris mailing list.
-#
-
-CFLAGS = -g -Wall -fPIC  	# for Linux and other gcc systems
+CFLAGS = -g -Wall -fPIC -Lsrc -Isrc	# for Linux and other gcc systems
 OP=$(CFLAGS)  
-CC=cc	#for Linux
+CC=gcc	#for Linux
 
-# compilation rule for general cases
-.o :
-	$(CC) $(OP) -o $@ $? -lm
-.c.o:
-	$(CC) -c $(OP) $<     
 
-SWEOBJ = swedate.o swehouse.o swejpl.o swemmoon.o swemplan.o swepcalc.o sweph.o\
-	swepdate.o swephlib.o swecl.o swehel.o rise.o
-
-swetest: swetest.o libswe.a
-	$(CC) $(OP) -o swetest swetest.o -L. -lswe -lm -ldl
-rise: rise.o libswe.a
-	$(CC) $(OP) -o rise rise.o -L. -lswe -lm -ldl
-
-swemini: swemini.o libswe.a
-	$(CC) $(OP) -o swemini swemini.o -L. -lswe -lm
-
-# create an archive and a dynamic link libary fro SwissEph
-# a user of this library will inlcude swephexp.h  and link with -lswe
-
-libswe.a: $(SWEOBJ)
-	ar r libswe.a	$(SWEOBJ)
-
-libswe.so: $(SWEOBJ)
-	$(CC) -shared -o libswe.so $(SWEOBJ)
+rise: rise.o
+	$(CC) $(OP) -o rise rise.o -L. -lswe -lm
 
 clean:
-	rm -f *.o swetest libswe*
+	rm -f *.o rise.exe
 	
-###
-swecl.o: swejpl.h sweodef.h swephexp.h swedll.h sweph.h swephlib.h
-sweclips.o: sweodef.h swephexp.h swedll.h
-swedate.o: swephexp.h sweodef.h swedll.h
-swehel.o: swephexp.h sweodef.h swedll.h
-swehouse.o: swephexp.h sweodef.h swedll.h swephlib.h swehouse.h
-swejpl.o: swephexp.h sweodef.h swedll.h sweph.h swejpl.h
-swemini.o: swephexp.h sweodef.h swedll.h
-swemmoon.o: swephexp.h sweodef.h swedll.h sweph.h swephlib.h
-swemplan.o: swephexp.h sweodef.h swedll.h sweph.h swephlib.h swemptab.h
-swepcalc.o: swepcalc.h swephexp.h sweodef.h swedll.h
-sweph.o: swejpl.h sweodef.h swephexp.h swedll.h sweph.h swephlib.h
-swephlib.o: swephexp.h sweodef.h swedll.h sweph.h swephlib.h
-swetest.o: swephexp.h sweodef.h swedll.h
-rise.o: swephexp.h sweodef.h swedll.h
+rise.o:
