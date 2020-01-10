@@ -98,8 +98,8 @@ int main()
   //  Calculate Nocturnal Tides
   int i;
   int j;
-  long double nocday = ( tset - trise ) / 30 ;
-  printf("nocday: %Lf\n\n", nocday);
+  double nocday = ( tset - trise ) / 30 ;
+  printf("nocday: %f\n\n", nocday);
   for ( i=0; i<30; i++) {
 
     j = i % 5;
@@ -122,14 +122,14 @@ int main()
         break;
     }
 
-    printf("%Lf\t", trise + i * nocday);
+    printf("%f\t", trise + i * nocday);
 
     swe_jdet_to_utc(trise + i * nocday, gregflag, &iyear_utc, &imonth_utc, &iday_utc, &ihour_utc, &imin_utc, &dsec_utc);
     swe_utc_time_zone(iyear_utc, imonth_utc, iday_utc, ihour_utc, imin_utc, dsec_utc, -d_timezone, &iyear, &imonth, &iday, &ihour, &imin, &dsec);
     printf(": date=%i/%i/%i, time=%02i:%02i:%05.2f\n", iyear, imonth, iday, ihour, imin, dsec);
 
   }
-  printf("\nCheck: %Lf\n\n", trise + 29 * nocday );
+  printf("\nCheck: %f\n\n", trise + 29 * nocday );
 
   // Calculate moon stuff. Needs more work
   double attr[20];
