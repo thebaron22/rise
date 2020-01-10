@@ -1,3 +1,5 @@
 *.o
 *.a
 *~
+rise.exe
+rise
