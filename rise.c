@@ -52,6 +52,7 @@ int main()
 
   if (return_code == ERR) {
     printf("%s\n", serr);
+    return 1;
   }
 
   swe_revjul(trise, gregflag, &year, &month, &day, &rhour);
@@ -62,6 +63,7 @@ int main()
 
   if (return_code == ERR) {
     printf("%s\n", serr);
+    return 1;
   }
 
   swe_revjul(tset, gregflag, &year, &month, &day, &shour);
