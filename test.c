@@ -3,8 +3,13 @@
 int main()
 {
 
-  setloc(150.995180, -33.818650, 87.0);
-  sunriseset(2020, 1, 11);
+  struct srs psrs;
+
+  psrs.lng = 150.995180;
+  psrs.lat = -33.818650;
+  psrs.alt = 87.0;
+
+  sunriseset(&psrs, 2020, 1, 11);
 
   return 0;
 

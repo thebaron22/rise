@@ -2,19 +2,7 @@
 #include <swephexp.h>
 #include "rise.h"
 
-
-void setloc(double lng, double lat, double alt)
-{
-
-  geopos[0] = lng;
-  geopos[1] = lat;
-  geopos[2] = alt;
-
-  return;
-
-}
-
-int sunriseset(int year, int month, int day)
+int sunriseset(struct srs *psrs, int year, int month, int day)
 {
   char serr[AS_MAXCH];
   double epheflag = SEFLG_SWIEPH;
@@ -30,10 +18,15 @@ int sunriseset(int year, int month, int day)
   datm[1] = 15;      // atmospheric temperature;
                      // irrelevant with Hindu method, can be set to 0
 
+  double geopos[3];
+  geopos[0] = psrs->lng;
+  geopos[1] = psrs->lat;
+  geopos[2] = psrs->alt;
+
   swe_set_topo(geopos[0], geopos[1], geopos[2]);
 
   int ipl = SE_SUN; // object whose rising is wanted
-  char starname[255]; // name of star, if a star's rising is wanted
+  char starname[255] = ""; // name of star, if a star's rising is wanted
                       // is "" or NULL, if Sun, Moon, or planet is calculated
   double trise; // for rising time
   double tset;  // for setting time
@@ -70,17 +63,11 @@ int sunriseset(int year, int month, int day)
   printf("Day length: %f\tJulian days\nDay length: %f\tHours\n\n", (tset - trise), (tset - trise) * 24 );
 
   // Turn Julian day into first UTC then localtime
-  swe_jdet_to_utc(trise, gregflag, &rise_iyear_utc, &rise_imonth_utc, &rise_iday_utc, &rise_ihour_utc, &rise_imin_utc, &rise_dsec_utc);
-  printf("UTC   sunrise : date=%i/%i/%i, time=%02i:%02i:%05.2f\n", rise_iyear_utc, rise_imonth_utc, rise_iday_utc, rise_ihour_utc, rise_imin_utc, rise_dsec_utc);
+  swe_jdet_to_utc(trise, gregflag, &psrs->rise_year, &psrs->rise_month, &psrs->rise_day, &psrs->rise_hour, &psrs->rise_min, &psrs->rise_sec);
+  printf("UTC   sunrise : date=%i/%i/%i, time=%02i:%02i:%05.2f\n", psrs->rise_year, psrs->rise_month, psrs->rise_day, psrs->rise_hour, psrs->rise_min, psrs->rise_sec);
 
-  swe_utc_time_zone(rise_iyear_utc, rise_imonth_utc, rise_iday_utc, rise_ihour_utc, rise_imin_utc, rise_dsec_utc, d_timezone, &rise_iyear, &rise_imonth, &rise_iday, &rise_ihour, &rise_imin, &rise_dsec);
-  printf("Local sunrise  : date=%i/%i/%i, time=%02i:%02i:%05.2f\n\n", rise_iyear, rise_imonth, rise_iday, rise_ihour, rise_imin, rise_dsec);
-
-  swe_jdet_to_utc(tset, gregflag, &set_iyear_utc, &set_imonth_utc, &set_iday_utc, &set_ihour_utc, &set_imin_utc, &set_dsec_utc);
-  printf("UTC   sunset  : date=%i/%i/%i, time=%02i:%02i:%05.2f\n", set_iyear_utc, set_imonth_utc, set_iday_utc, set_ihour_utc, set_imin_utc, set_dsec_utc);
-
-  swe_utc_time_zone(set_iyear_utc, set_imonth_utc, set_iday_utc, set_ihour_utc, set_imin_utc, set_dsec_utc, d_timezone, &set_iyear, &set_imonth, &set_iday, &set_ihour, &set_imin, &set_dsec);
-  printf("Local sunset  : date=%i/%i/%i, time=%02i:%02i:%05.2f\n\n", set_iyear, set_imonth, set_iday, set_ihour, set_imin, set_dsec);
+  swe_jdet_to_utc(tset, gregflag, &psrs->set_year, &psrs->set_month, &psrs->set_day, &psrs->set_hour, &psrs->set_min, &psrs->set_sec);
+  printf("UTC   sunset  : date=%i/%i/%i, time=%02i:%02i:%05.2f\n", psrs->set_year, psrs->set_month, psrs->set_day, psrs->set_hour, psrs->set_min, psrs->set_sec);
 
   return 0;
 }

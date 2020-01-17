@@ -5,6 +5,8 @@ CFLAGS = -g -Wall -fPIC -I. -L. # for Linux and other gcc systems
 OP=$(CFLAGS)  
 CC=gcc	#for Linux
 
+.phony: all clean
+
 all: librise test
 
 test: test.o
@@ -16,6 +18,6 @@ librise: rise.o
 clean:
 	rm -f *.o librise.so test
 	
-rise.o:
+rise.o: rise.c rise.h
 
-test.o:
+test.o: test.c
