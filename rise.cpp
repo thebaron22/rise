@@ -12,10 +12,6 @@ class csrs {
 
     // array for atmospheric conditions
     double datm[2];
-    datm[0] = 1013.25; // atmospheric pressure;
-                     // irrelevant with Hindu method, can be set to 0
-    datm[1] = 15;      // atmospheric temperature;
-                     // irrelevant with Hindu method, can be set to 0
 
     double geopos[3];
 
@@ -62,11 +58,16 @@ class csrs {
       swe_set_topo(geopos[0], geopos[1], geopos[2]);
     };
 
-    void setdate() {
+    void setdate(int x, int y, int z) {
       year = x;
       month = y;
       day = z;
       
+      datm[0] = 1013.25; // atmospheric pressure;
+                     // irrelevant with Hindu method, can be set to 0
+      datm[1] = 15;      // atmospheric temperature;
+                     // irrelevant with Hindu method, can be set to 0
+
       // calculate the julian day number of the date at 0:00 UT:
       tjd = swe_julday(year,month,day,22,gregflag);
 
@@ -89,7 +90,7 @@ class csrs {
 
       swe_jdet_to_utc(trise, gregflag, &rise_year, &rise_month, &rise_day, &rise_hour, &rise_min, &rise_sec);
 
-      int return_code = swe_rise_trans(trise, ipl, starname, epheflag, SE_CALC_SET, geopos, datm[0], datm[1], &tset, serr);
+      return_code = swe_rise_trans(trise, ipl, starname, epheflag, SE_CALC_SET, geopos, datm[0], datm[1], &tset, serr);
 
       if (return_code == ERR) {
         printf("%s\n", serr);
@@ -100,4 +101,4 @@ class csrs {
 
       return 0;
     };
-}
+};
